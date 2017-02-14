@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import base64
 
 from suds import WebFault
 from suds.client import Client
@@ -9,12 +10,13 @@ logger = logging.getLogger(__name__)
 class AllegroWebAPI(object):
     country_code = 1  # Poland
     country_id = 1  # Poland
-    endpoint = 'https://webapi.allegro.pl/service.php?wsdl'
+    endpoint = 'https://webapi.allegro.pl.webapisandbox.pl/service.php?wsdl'
+    endpoint2 = 'https://webapi.allegro.pl/service.php?wsdl'
 
     def __init__(self, api_key, login, password):
         self.api_key = api_key
         self.login = login
-        self.enc_passwd = hashlib.sha256(password).digest().encode('base64')
+        self.enc_passwd = base64.b64encode(hashlib.sha256(password.encode('utf-8')).digest()).decode()
         self.client = Client(self.endpoint)
         self.service = self.client.service
         self.versions = {}
